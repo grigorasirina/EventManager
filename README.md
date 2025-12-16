@@ -150,7 +150,12 @@ pnpm prisma studio
 
 ---
 
-## 📄 License
+## 📄 UNLICENSED
 
-This project is for commercial development only.
+This software is proprietary and confidential.
+Unauthorized copying, modification, distribution, or use of this software,
+via any medium, is strictly prohibited.
+
+All rights reserved.
+
 

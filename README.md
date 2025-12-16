@@ -152,5 +152,5 @@ pnpm prisma studio
 
 ## 📄 License
 
-This project is for educational and assessment purposes.
+This project is for commercial development only.
 

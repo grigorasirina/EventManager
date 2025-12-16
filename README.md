@@ -4,7 +4,7 @@ A full‑stack **Event Management Platform** where staff can create events and u
 
 ---
 
-## ✨ Features
+##  Features
 
 - Staff can create and manage events
 - Users can browse events and sign up
@@ -16,7 +16,7 @@ A full‑stack **Event Management Platform** where staff can create events and u
 
 ---
 
-## 🧱 Tech Stack
+##  Tech Stack
 
 ### Frontend
 - **Next.js (App Router)**
@@ -45,7 +45,7 @@ A full‑stack **Event Management Platform** where staff can create events and u
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```
 event-platform/
@@ -56,7 +56,7 @@ event-platform/
 
 ---
 
-## 🔐 Security Considerations
+##  Security Considerations
 
 - No payment or card data is stored in the application
 - All payments are handled by Stripe Checkout
@@ -66,7 +66,7 @@ event-platform/
 
 ---
 
-## ⚙️ Environment Variables
+##  Environment Variables
 
 ### Backend (`apps/api/.env`)
 ```
@@ -84,12 +84,12 @@ NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 
 ---
 
-## 🚀 Running the Project Locally
+##  Running the Project Locally
 
 ### 1️⃣ Clone the repository
 ```
-git clone https://github.com/your-username/event-manager.git
-cd event-manager
+git clone https://github.com/grigorasirina/EventManager.git
+cd EventManager
 ```
 
 ### 2️⃣ Install dependencies
@@ -123,7 +123,7 @@ pnpm prisma migrate dev
 
 ---
 
-## 🧪 Database Management
+##  Database Management
 
 - Run Prisma Studio:
 ```
@@ -133,7 +133,7 @@ pnpm prisma studio
 
 ---
 
-## 📝 Notes
+##  Notes
 
 - Free events are represented by `priceCents = 0`
 - Paid events have `priceCents > 0`
@@ -141,7 +141,7 @@ pnpm prisma studio
 
 ---
 
-## 📌 Future Improvements
+##  Future Improvements
 
 - User authentication via OAuth
 - Event capacity enforcement
@@ -150,7 +150,7 @@ pnpm prisma studio
 
 ---
 
-## 📄 UNLICENSED
+##  UNLICENSED
 
 This software is proprietary and confidential.
 Unauthorized copying, modification, distribution, or use of this software,

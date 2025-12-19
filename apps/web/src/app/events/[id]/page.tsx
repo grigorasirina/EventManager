@@ -1,14 +1,13 @@
 import SignupButton from "./signup-button";
-
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000";
+import { prisma } from "@/lib/prisma";
 
 type Event = {
   id: string;
   title: string;
   description?: string | null;
   location?: string | null;
-  startsAt: string;
-  endsAt: string;
+  startsAt: Date;
+  endsAt: Date;
   priceCents: number;
   currency: string;
 };
@@ -16,30 +15,42 @@ type Event = {
 export default async function EventPage({
   params,
 }: {
-  params: Promise<{ id: string }>;
+  params: { id: string };
 }) {
-  const { id } = await params;
+  const event = await prisma.event.findUnique({
+    where: { id: params.id },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      location: true,
+      startsAt: true,
+      endsAt: true,
+      priceCents: true,
+      currency: true,
+    },
+  });
 
-  const res = await fetch(`${API_URL}/events/${id}`, { cache: "no-store" });
-
-  if (!res.ok) {
+  if (!event) {
     return <main className="p-6">Event not found</main>;
   }
 
-  const event: Event = await res.json();
-
   return (
-    <main className="p-6 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold">{event.title}</h1>
+    <main className="p-6 max-w-3xl mx-auto space-y-4">
+      <h1 className="text-3xl font-semibold">{event.title}</h1>
 
-      <p className="mt-2 text-sm">
-        {event.priceCents === 0 ? "Free" : `£${(event.priceCents / 100).toFixed(2)}`} ·{" "}
-        {event.location ?? "Online/To be confirmed"}
+      <p className="text-sm text-gray-600">
+        {event.priceCents === 0
+          ? "Free"
+          : `£${(event.priceCents / 100).toFixed(2)}`}{" "}
+        · {event.location ?? "Online / To be confirmed"}
       </p>
 
-      {event.description ? <p className="mt-4">{event.description}</p> : null}
+      {event.description && (
+        <p className="text-gray-700">{event.description}</p>
+      )}
 
-      <div className="mt-8">
+      <div className="pt-6">
         <SignupButton eventId={event.id} />
       </div>
     </main>

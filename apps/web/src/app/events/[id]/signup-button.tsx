@@ -2,8 +2,6 @@
 
 import { useState } from "react";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
-
 export default function SignupButton({ eventId }: { eventId: string }) {
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -13,16 +11,14 @@ export default function SignupButton({ eventId }: { eventId: string }) {
     setMsg(null);
 
     try {
-      const res = await fetch(`${API_URL}/events/${eventId}/signup`, {
-        method: "POST",
-        headers: {
-          // TEMP until Google login:
-          "x-user-id": "user_1",
-          "x-user-role": "USER",
-        },
-      });
-
+      const res = await fetch(`/api/events/${eventId}/signup`, { method: "POST" });
       const data = await res.json().catch(() => ({}));
+
+      if (res.status === 401) {
+        setMsg("Please sign in with Google first.");
+        return;
+      }
+
       if (!res.ok) throw new Error(data?.error || "Signup failed");
 
       setMsg(data.requiresPayment ? "Signed up (payment required next) 💳" : "Signed up ✅");
@@ -42,6 +38,7 @@ export default function SignupButton({ eventId }: { eventId: string }) {
       >
         {loading ? "Signing up..." : "Sign up"}
       </button>
+
       {msg ? <p className="text-sm">{msg}</p> : null}
     </div>
   );

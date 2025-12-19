@@ -1,6 +1,7 @@
 import Link from "next/link";
+import AuthButtons from "@/app/components/auth-buttons";
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000";
+const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:4000";
 
 type Event = {
   id: string;
@@ -21,7 +22,11 @@ export default async function HomePage() {
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
+      <div className="mb-4 flex justify-end">
+      <AuthButtons />
+      </div>
       <h1 className="text-2xl font-bold mb-4">Events</h1>
+      
 
       {events.length === 0 ? (
         <p>No events found.</p>

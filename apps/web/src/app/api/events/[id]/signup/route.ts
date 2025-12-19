@@ -8,28 +8,22 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await getServerSession(authOptions);
-
   if (!session?.user?.email) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const { id: eventId } = await params;
 
-  // Ensure user exists (NextAuth usually creates it, but this keeps it robust)
-  const user = await prisma.user.upsert({
+  const user = await prisma.user.findUnique({
     where: { email: session.user.email },
-    update: { name: session.user.name ?? undefined },
-    create: {
-      email: session.user.email,
-      name: session.user.name ?? null,
-      role: "USER",
-    },
   });
 
-  const event = await prisma.event.findUnique({ where: { id: eventId } });
-  if (!event) {
-    return NextResponse.json({ error: "Event not found" }, { status: 404 });
+  if (!user) {
+    return NextResponse.json({ error: "User not found" }, { status: 500 });
   }
+
+  const event = await prisma.event.findUnique({ where: { id: eventId } });
+  if (!event) return NextResponse.json({ error: "Event not found" }, { status: 404 });
 
   try {
     const signup = await prisma.signup.create({

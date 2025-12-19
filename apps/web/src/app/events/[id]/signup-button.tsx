@@ -21,7 +21,23 @@ export default function SignupButton({ eventId }: { eventId: string }) {
 
       if (!res.ok) throw new Error(data?.error || "Signup failed");
 
-      setMsg(data.requiresPayment ? "Signed up (payment required next) 💳" : "Signed up ✅");
+      if (data.requiresPayment) {
+  setMsg("Redirecting to payment…");
+  const checkoutRes = await fetch("/api/payments/create-checkout-session", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ eventId }),
+  });
+
+  const checkoutData = await checkoutRes.json().catch(() => ({}));
+  if (!checkoutRes.ok) throw new Error(checkoutData?.error || "Failed to start checkout");
+
+  window.location.href = checkoutData.url;
+  return;
+}
+
+setMsg("Signed up ✅");
+
     } catch (e: any) {
       setMsg(e.message || "Error");
     } finally {

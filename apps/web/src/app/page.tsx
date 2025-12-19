@@ -22,9 +22,12 @@ export default async function HomePage() {
 
   return (
     <main className="p-6 max-w-3xl mx-auto">
-      <div className="mb-4 flex justify-end">
-      <AuthButtons />
-      </div>
+      <div className="mb-4 flex justify-end items-center gap-4">
+    <Link className="underline" href="/my-events">
+      My Events
+    </Link>
+    <AuthButtons />
+    </div>
       <h1 className="text-2xl font-bold mb-4">Events</h1>
       
 

@@ -9,7 +9,9 @@ datasource db {
 enum UserRole {
   USER
   STAFF
+  ADMIN
 }
+
 
 enum PaymentStatus {
   NOT_REQUIRED

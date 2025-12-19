@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import PayNowButton from "./pay-now-button";
+import AddToCalendarButton from "./add-to-calendar-button";
+
 
 export default async function MyEventsPage() {
   const session = await getServerSession(authOptions);
@@ -81,15 +83,22 @@ export default async function MyEventsPage() {
                       <PayNowButton eventId={e.id} />
                     ) : null}
 
-                    {isPaidEvent && s.paymentStatus === "PAID" ? (
-                      <div className="text-sm">✅ Paid</div>
+                    {!isPaidEvent || s.paymentStatus === "PAID" ? (
+                      <div className="mt-2">
+                        <AddToCalendarButton eventId={e.id} />
+                      </div>
                     ) : null}
 
-                    {!isPaidEvent ? <div className="text-sm">✅ Confirmed</div> : null}
+                    {isPaidEvent && s.paymentStatus === "PAID" ? (
+                      <div className="text-sm mt-2">✅ Paid</div>
+                    ) : null}
+
+                    {!isPaidEvent ? <div className="text-sm mt-2">✅ Confirmed</div> : null}
                   </div>
-                </div>
+                </div> {/* <-- THIS was missing */}
               </li>
             );
+
           })}
         </ul>
       )}

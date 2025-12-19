@@ -9,7 +9,16 @@ export const authOptions: NextAuthOptions = {
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      // (keep your calendar scope params here too if you added them)
+
+      authorization: {
+        params: {
+          scope:
+            "openid email profile https://www.googleapis.com/auth/calendar.events",
+          access_type: "offline",
+          prompt: "consent",
+          response_type: "code",
+        },
+      },
     }),
   ],
   session: { strategy: "database" },
@@ -20,7 +29,6 @@ export const authOptions: NextAuthOptions = {
       const email = user.email?.toLowerCase();
 
       if (adminEmail && email && email === adminEmail) {
-        // Promote to ADMIN if not already
         await prisma.user.update({
           where: { email: user.email! },
           data: { role: "ADMIN" },

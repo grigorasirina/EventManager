@@ -61,7 +61,7 @@ Deployment
 Vercel (single app deployment)
 Neon for database hosting
 
-🗂 Project Structure
+Project Structure
 
 apps/
  └─ web/                # Full-stack Next.js app
@@ -72,7 +72,7 @@ apps/
     ├─ prisma/          # Prisma schema & migrations
     └─ package.json
 
-🗄 Database (PostgreSQL)
+Database (PostgreSQL)
 Hosting
 
 The database is hosted on Neon (https://neon.tech), a serverless PostgreSQL provider.
@@ -168,7 +168,7 @@ Visit:
 
 http://localhost:3000
 
-🚀 Deployment (Vercel)
+Deployment (Vercel)
 
 Push repository to GitHub
 
@@ -207,7 +207,7 @@ Google Calendar requires consent on first sign-in
 
 Admin role is auto-assigned based on ADMIN_EMAIL
 
-📄 License
+License
 
 This project is developed as a commercial / paid development project.
 All rights reserved unless otherwise stated.

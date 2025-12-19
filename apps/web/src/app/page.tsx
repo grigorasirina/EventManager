@@ -1,5 +1,4 @@
 import Link from "next/link";
-import AuthButtons from "@/app/components/auth-buttons";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -51,7 +50,6 @@ export default async function HomePage() {
           </>
         ) : null}
 
-        <AuthButtons />
       </div>
 
       <h1 className="text-2xl font-bold mb-4">Events</h1>
@@ -61,21 +59,24 @@ export default async function HomePage() {
       ) : (
         <ul className="space-y-4">
           {events.map((event) => (
-            <li key={event.id} className="border rounded p-4">
-              <div className="flex justify-between items-center gap-4">
-                <Link href={`/events/${event.id}`} className="font-semibold underline">
-                  {event.title}
-                </Link>
+            <li
+  key={event.id}
+  className="group border rounded-xl p-5 bg-white/70 hover:bg-white transition shadow-sm hover:shadow-md"
+>
+  <div className="flex justify-between items-start gap-4">
+    <Link href={`/events/${event.id}`} className="font-semibold text-lg group-hover:underline">
+      {event.title}
+    </Link>
 
-                <span className="text-sm">
-                  {event.priceCents === 0 ? "Free" : `£${(event.priceCents / 100).toFixed(2)}`}
-                </span>
-              </div>
+    <span className="text-sm px-2 py-1 rounded-full bg-gray-100">
+      {event.priceCents === 0 ? "Free" : `£${(event.priceCents / 100).toFixed(2)}`}
+    </span>
+  </div>
 
-              {event.description ? (
-                <p className="text-sm mt-2">{event.description}</p>
-              ) : null}
-            </li>
+  {event.description ? (
+    <p className="text-sm text-gray-600 mt-2">{event.description}</p>
+  ) : null}
+</li>
           ))}
         </ul>
       )}

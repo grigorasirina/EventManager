@@ -3,6 +3,11 @@ import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/prisma";
 
+function isAdminEmail(email?: string | null) {
+  const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
+  return !!adminEmail && !!email && email.toLowerCase() === adminEmail;
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -23,19 +28,32 @@ export const authOptions: NextAuthOptions = {
   ],
   session: { strategy: "database" },
 
-  callbacks: {
-    async signIn({ user }) {
-      const adminEmail = process.env.ADMIN_EMAIL?.toLowerCase();
-      const email = user.email?.toLowerCase();
-
-      if (adminEmail && email && email === adminEmail) {
+  events: {
+    async createUser({ user }) {
+      if (isAdminEmail(user.email)) {
         await prisma.user.update({
+          where: { id: user.id },
+          data: { role: "ADMIN" },
+        });
+      }
+    },
+    async linkAccount({ user }) {
+      // In case user existed and account gets linked later
+      if (isAdminEmail(user.email)) {
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { role: "ADMIN" },
+        });
+      }
+    },
+    async signIn({ user }) {
+      // Keep admin role enforced over time without creating users
+      if (isAdminEmail(user.email)) {
+        await prisma.user.updateMany({
           where: { email: user.email! },
           data: { role: "ADMIN" },
         });
       }
-
-      return true;
     },
   },
 };

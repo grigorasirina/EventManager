@@ -1,6 +1,7 @@
 import Stripe from "stripe";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { sendPaymentSuccessEmail } from "@/lib/email";
 
 export const dynamic = "force-dynamic";
 
@@ -41,6 +42,19 @@ export async function POST(req: Request) {
             typeof session.payment_intent === "string" ? session.payment_intent : null,
         },
       });
+      const updated = await prisma.signup.findUnique({
+        where: { id: signupId },
+        include: { user: true, event: true },
+      });
+
+      if (updated?.user?.email && updated?.event?.title) {
+        await sendPaymentSuccessEmail({
+          to: updated.user.email,
+          eventTitle: updated.event.title,
+          eventId: updated.event.id,
+        });
+}
+
     }
   }
 

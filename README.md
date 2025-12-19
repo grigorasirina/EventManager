@@ -1,161 +1,213 @@
-# Event Manager
+Event Manager Platform
 
-A full‑stack **Event Management Platform** where staff can create events and users can sign up for them. Events can be **free or paid**, with payments handled securely via Stripe. The project is built with a modern JavaScript/TypeScript stack and hosted entirely on free tiers.
+A full-stack Event Management & Booking Platform built with Next.js, Prisma, and PostgreSQL, supporting free & paid events, role-based access, Google authentication, Stripe payments, and Google Calendar integration.
 
----
+This project is designed as a modern production-style showcase using a single Next.js full-stack application (no separate backend service).
 
-##  Features
+Features
+Public
 
-- Staff can create and manage events
-- Users can browse events and sign up
-- Supports **free and paid events**
-- Secure payment flow using **Stripe Checkout** (no card data stored)
-- Google Calendar integration (add events to calendar)
-- Responsive and accessible UI
-- Role‑based access (staff vs users)
+Browse all upcoming events
+View detailed event pages
+Free & paid events support
+Users (Google Auth)
+Sign up for events
+View registered events
+Pay for paid events via Stripe
+Add confirmed events to Google Calendar
 
----
+Staff
 
-##  Tech Stack
+Create events
+Edit and delete events
+View event attendees
 
-### Frontend
-- **Next.js (App Router)**
-- **TypeScript**
-- **Tailwind CSS**
-- **shadcn/ui + Radix UI** (accessible components)
-- **TanStack Query (React Query)**
-- **React Hook Form + Zod**
+Admin
 
-### Backend
-- **Node.js + Express.js**
-- **TypeScript**
-- **Prisma ORM**
+Full staff access
+Manage users
+Promote users to staff/admin (auto-admin via env variable)
 
-### Database
-- **PostgreSQL (Neon – free tier)**
+Tech Stack
+Frontend & Backend
 
-### Payments & Integrations
-- **Stripe Checkout** (payments)
-- **Google Calendar API**
+Next.js 16 (App Router, Server Components)
+TypeScript
+Tailwind CSS
 
-### Hosting (Free Tiers)
-- **Vercel** – Frontend
-- **Render** – Backend API
-- **Neon** – PostgreSQL database
+Authentication
 
----
+NextAuth / Auth.js
+Google OAuth
 
-##  Project Structure
+Database
 
-```
-event-platform/
-  apps/
-    web/    # Next.js frontend
-    api/    # Express backend
-```
+PostgreSQL
+Prisma ORM
+Hosted on Neon (serverless Postgres)
 
----
+Payments
 
-##  Security Considerations
+Stripe
+Webhooks for payment confirmation
 
-- No payment or card data is stored in the application
-- All payments are handled by Stripe Checkout
-- Database credentials are stored in backend environment variables only
-- HTTPS is enforced by hosting providers
-- Prisma ORM prevents SQL injection
+Calendar
 
----
+Google Calendar API
+Adds confirmed events to user calendars
 
-##  Environment Variables
+Deployment
 
-### Backend (`apps/api/.env`)
-```
+Vercel (single app deployment)
+Neon for database hosting
+
+🗂 Project Structure
+
+apps/
+ └─ web/                # Full-stack Next.js app
+    ├─ src/
+    │  ├─ app/          # App Router (pages + API routes)
+    │  ├─ lib/          # Prisma, auth, helpers
+    │  └─ components/  # UI components
+    ├─ prisma/          # Prisma schema & migrations
+    └─ package.json
+
+🗄 Database (PostgreSQL)
+Hosting
+
+The database is hosted on Neon (https://neon.tech), a serverless PostgreSQL provider.
+
+Connection String
+
+Neon provides a PostgreSQL connection URL that looks like:
+postgresql://USER:PASSWORD@HOST/DATABASE?sslmode=require
+
+This string must be stored as an environment variable.
+
+Environment Variables
+
+Create a .env.local file inside apps/web for local development.
+
+Required Variables
+# Database (Neon PostgreSQL)
 DATABASE_URL=postgresql://...
+
+# Auth
+NEXTAUTH_SECRET=your-random-secret
+ADMIN_EMAIL=admin@example.com
+
+# Google OAuth
+GOOGLE_CLIENT_ID=xxxxxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=xxxxxxxx
+
+# Stripe
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-PORT=4000
-```
 
-### Frontend (`apps/web/.env.local`)
-```
-NEXT_PUBLIC_API_URL=http://localhost:4000
-NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
-```
 
----
+How to Obtain API Keys
+1️⃣ Neon (PostgreSQL)
 
-##  Running the Project Locally
+Create a project at https://neon.tech
 
-### 1️⃣ Clone the repository
-```
-git clone https://github.com/grigorasirina/EventManager.git
-cd EventManager
-```
+Copy the connection string
 
-### 2️⃣ Install dependencies
+Set it as DATABASE_URL
 
-Frontend:
-```
+2️⃣ Google OAuth (Login + Calendar)
+
+Go to https://console.cloud.google.com
+
+Create a project
+
+Enable:
+
+Google Identity
+Google Calendar API
+Create OAuth credentials:
+
+Authorized origin:
+
+http://localhost:3000
+
+Redirect URI:
+
+http://localhost:3000/api/auth/callback/google
+
+GOOGLE_CLIENT_ID
+
+GOOGLE_CLIENT_SECRET
+
+For production (Vercel), update URLs to your deployed domain.
+
+3️⃣ Stripe (Payments)
+
+Create an account at https://stripe.com
+
+Use Test mode
+
+
+Secret key → STRIPE_SECRET_KEY
+
+Create a webhook endpoint:
+
+https://your-domain.vercel.app/api/stripe/webhook
+
+
+Copy webhook signing secret → STRIPE_WEBHOOK_SECRET
+
+Local Development
 cd apps/web
 pnpm install
-pnpm dev
-```
-
-Backend:
-```
-cd apps/api
-pnpm install
-pnpm dev
-```
-
-### 3️⃣ Database setup
-
-- Create a free PostgreSQL database on **Neon**
-- Add the connection string to `apps/api/.env`
-- Run migrations:
-```
+pnpm prisma generate
 pnpm prisma migrate dev
-```
-
-### 4️⃣ Open the app
-- Frontend: http://localhost:3000
-- Backend API: http://localhost:4000
-
----
-
-##  Database Management
-
-- Run Prisma Studio:
-```
-pnpm prisma studio
-```
-- Migrations are stored in `apps/api/prisma/migrations`
-
----
-
-##  Notes
-
-- Free events are represented by `priceCents = 0`
-- Paid events have `priceCents > 0`
-- Payment state is tracked per signup (`NOT_REQUIRED`, `PENDING`, `PAID`)
-
----
-
-##  Future Improvements
-
-- User authentication via OAuth
-- Event capacity enforcement
-- Refund handling
-- Admin analytics dashboard
-
----
-
-##  UNLICENSED
-
-This software is proprietary and confidential.
-Unauthorized copying, modification, distribution, or use of this software,
-via any medium, is strictly prohibited.
-
-All rights reserved.
+pnpm dev
 
 
+Visit:
+
+http://localhost:3000
+
+🚀 Deployment (Vercel)
+
+Push repository to GitHub
+
+Import project in Vercel
+
+Set Root Directory to:
+
+apps/web
+
+
+Add all environment variables in Vercel dashboard
+
+Deploy
+
+Post-deploy checklist
+
+Update Google OAuth redirect URI to production domain
+
+Update Stripe webhook URL to production domain
+
+Design Decisions
+
+Single full-stack Next.js app (simpler deployment)
+
+Server Components + Prisma (no internal HTTP calls)
+
+Role-based access enforced server-side
+
+External managed DB (Neon) for reliability
+
+Notes
+
+Payments run in Stripe test mode
+
+Google Calendar requires consent on first sign-in
+
+Admin role is auto-assigned based on ADMIN_EMAIL
+
+📄 License
+
+This project is developed as a commercial / paid development project.
+All rights reserved unless otherwise stated.
